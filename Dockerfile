@@ -54,13 +54,16 @@ RUN apk add --no-cache --upgrade \
     libdrm \
     dumb-init
 
-# Создаем директории и настраиваем пользователя
-RUN mkdir -p /usr/share/fonts/local /data/chrome-userdir /home/pptruser/Downloads \
-    && addgroup -S pptruser && adduser -S -G pptruser pptruser \
-    && chown -R pptruser:pptruser /home/pptruser /app \
-    && chmod -R 755 /app
+# Создаем пользователя и директории
+RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
+    && mkdir -p /usr/share/fonts/local /data/chrome-userdir /home/pptruser/Downloads
 
+# Создаем рабочую директорию ПОСЛЕ создания пользователя
 WORKDIR /app
+
+# Настраиваем права доступа к рабочей директории
+RUN chown -R pptruser:pptruser /app /home/pptruser \
+    && chmod -R 755 /app
 
 # Копируем зависимости
 COPY package*.json ./
@@ -72,6 +75,9 @@ RUN npm config set registry https://registry.npmjs.org/ && \
 
 # Копируем собранное приложение
 COPY --from=development /app/dist ./dist
+
+# Еще раз настраиваем права после копирования файлов
+RUN chown -R pptruser:pptruser /app
 
 # Настройки Puppeteer
 ENV PUPPETEER_ARGS="--no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer --single-process"
