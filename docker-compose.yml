@@ -9,8 +9,6 @@ services:
     environment:
       - NODE_ENV=production
     restart: unless-stopped
-    volumes:
-      - ./logs:/app/logs
 
   prometheus:
     image: prom/prometheus:latest
@@ -57,7 +55,7 @@ services:
     image: grafana/promtail:2.9.2
     container_name: promtail
     volumes:
-      - ./logs:/var/log
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./promtail-config.yml:/etc/promtail/config.yml
     command: -config.file=/etc/promtail/config.yml
     depends_on:
