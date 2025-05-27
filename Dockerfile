@@ -79,6 +79,9 @@ RUN yarn config set registry https://registry.npmjs.org/ && \
 # Копируем собранное приложение
 COPY --from=development /app/dist ./dist
 
+# Создаём папку для логов и настраиваем права
+RUN mkdir -p /app/logs && chown -R pptruser:pptruser /app/logs
+
 # Еще раз настраиваем права после копирования файлов
 RUN chown -R pptruser:pptruser /app
 
