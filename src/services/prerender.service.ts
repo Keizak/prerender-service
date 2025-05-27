@@ -94,7 +94,7 @@ export class PrerenderService {
                 waitUntil: config.waitUntil as PuppeteerLifeCycleEvent,
                 timeout: config.navTimeout,
             });
-            await page.addStyleTag({ path: 'styles-445TP4L3.css' });
+            // await page.addStyleTag({ path: 'styles-445TP4L3.css' });
 
             const pageContent = await page.content();
 
